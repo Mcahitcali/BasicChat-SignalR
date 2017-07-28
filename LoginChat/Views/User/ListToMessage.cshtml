@@ -1,0 +1,42 @@
+﻿@model IEnumerable<LoginChat.Models.ViewModel>
+
+@{
+    ViewBag.Title = "ListToMessage";
+}
+
+<h2>ListToMessage</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateMessage")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ToUsername)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FromUsername)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model=>model.MessageContent)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ToUsername)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FromUsername)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem=>item.MessageContent)
+        </td>
+        <td>
+            @Html.ActionLink("Delete", "Delete", new { id=item.MessageContent })
+        </td>
+    </tr>
+}
+
+</table>

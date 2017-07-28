@@ -1,0 +1,26 @@
+﻿@model IEnumerable<LoginChat.Models.ViewModel>
+<h2>Chatting</h2>
+
+<table id="content" class="table">
+    <tr >
+        <th>
+            Username
+        </th>
+        <th>
+            Message Content
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FromUsername)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MessageContent)
+            </td>
+        </tr>
+    }
+
+</table>

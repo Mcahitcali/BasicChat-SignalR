@@ -1,0 +1,114 @@
+﻿@model LoginChat.Models.GetView
+
+@{
+    ViewBag.Title = "CreateMessage";
+}
+
+
+
+<h2>CreateMessage</h2>
+
+<div class="col-md-6">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Message</h4>
+            <hr />
+            @Html.Hidden("Username",Session["Username"])
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.messages.ToID, "To", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model=>model.messages.ToID, new SelectList((IEnumerable<SelectListItem>)Model.UserNames,"Value","Text"), "Select To Username", htmlAttributes: new {@id="toUser", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.messages.ToID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.messages.MessageContent, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.messages.MessageContent, new {@id="message", htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.messages.MessageContent, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input id="Send" type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+    
+<div class="col-md-6">
+    <h4 id="test">Test: </h4>
+
+
+    <table id="content" class="table">
+        <tr>
+            <th>
+                Username
+            </th>
+            <th>
+                Message Content
+            </th>
+        </tr>
+
+        @foreach (var item in Model.view)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FromUsername)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MessageContent)
+                </td>
+            </tr>
+        }
+
+    </table>
+   @* @Html.Partial("ListOnlineMessages",Model.view,new ViewDataDictionary())*@
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    var myHub = $.connection.privateMessageHub;
+
+    myHub.client.showUsers = function (username) {
+        alert(username);
+    }
+
+    myHub.client.privateMessage = function (username, mesaj) {
+        
+        $("#content").append("<tr><td> " + username + "</td><td> " + mesaj + "</td></tr>");
+        
+    }
+
+    $.connection.hub.start().done(function ()
+    {
+       
+        var user = $('#Username').val()
+        $('#toUser').change(function () {
+            toUser = $("#toUser :selected").text();
+        });
+        
+        myHub.server.connectedUser(user);
+       // myHub.server.showOnlineUser();
+        $('#Send').click(function () {
+            var msg = $('#messages_MessageContent').val()
+            myHub.server.send(toUser,user, msg);
+            return false;
+        });
+        
+    });
+    
+</script>

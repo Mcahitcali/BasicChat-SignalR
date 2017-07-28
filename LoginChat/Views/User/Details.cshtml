@@ -1,0 +1,25 @@
+﻿@model LoginChat.Models.User
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(a => a.Username).ToString()
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(m=>m.Username)
+            @Session["Username"].ToString()
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
